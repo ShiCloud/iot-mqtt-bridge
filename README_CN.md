@@ -18,7 +18,7 @@
 ```json
 [
   {
-    "name": "user", //"动态生成的类名” 
+    "name": "user", //"动态生成的类名" 
     "topic": "user_topic",
     "clientId": "user_client",
     "cleanSession": true,
@@ -30,7 +30,7 @@
         "index": 1,
         "lenght": 8, //"截取多少个字节" 
         "offset": 2,
-        "idType": "auto" //”如果是auto就是用数据库的自增，否则是截取到的数据“
+        "idType": "auto" //"如果是auto就是用数据库的自增，否则是截取到的数据"
     },
     {
         "name": "loginLength",
@@ -43,7 +43,7 @@
         "name": "login",
         "type": "byte[]",
         "index": 3,
-        "dependsOn": 2 //"根据指定index的字段的值作为长度“ 
+        "dependsOn": 2 //"根据指定index的字段的值作为长度" 
     }
 
 ]
