@@ -1,0 +1,67 @@
+[
+  {
+    "name": "user",
+    "topic": "user_topic",
+    "clientId": "user_client",
+    "cleanSession": true,
+    "qos": 1,
+    "storeType": "mysql",
+    "fields": [{
+        "name": "id",
+        "type": "long",
+        "index": 1,
+        "lenght": 8,
+        "offset": 2,
+        "idType": "auto"
+    },
+    {
+        "name": "age",
+        "type": "short",
+        "index": 2,
+        "lenght": 2
+    },
+    {
+        "name": "weight",
+        "type": "float",
+        "index": 3,
+        "lenght": 4
+    },
+    {
+        "name": "salary",
+        "type": "double",
+        "index": 4,
+        "lenght": 8
+    },
+    {
+        "name": "loginLength",
+        "type": "int",
+        "index": 5,
+        "lenght": 2,
+        "isTransient": true
+    },
+    {
+        "name": "login",
+        "type": "byte[]",
+        "index": 6,
+        "dependsOn": 5
+    },
+    {
+        "name": "createTime",
+        "type": "date",
+        "index": 7,
+        "lenght": 8
+    },
+    {
+        "name": "isMale",
+        "type": "boolean",
+        "index": 8,
+        "lenght": 1
+    },
+    {
+        "name": "isDel",
+        "type": "byte",
+        "index": 9,
+        "lenght": 1
+    }]
+  }
+]

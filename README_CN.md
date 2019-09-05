@@ -16,7 +16,7 @@ then , this tools will automate save mqtt byte data into db.
 ```json
 [
   {
-    "name": "user",//this will become class name 
+    "name": "user",
     "topic": "user_topic",
     "clientId": "user_client",
     "cleanSession": true,
@@ -24,24 +24,24 @@ then , this tools will automate save mqtt byte data into db.
     "storeType": "mysql",
     "fields": [{
         "name": "id",
-        "type": "long",//this will become field type 
+        "type": "long",
         "index": 1,
-        "lenght": 8,//how many bytes will be cut into this field 
+        "lenght": 8,
         "offset": 2,
-        "idType": "auto"//this field will use db auto gene value, insert into db
+        "idType": "auto"
     },
     {
         "name": "loginLength",
         "type": "int",
         "index": 2,
         "lenght": 2,
-        "isTransient": true//this will not saved into db
+        "isTransient": true
     },
     {
         "name": "login",
         "type": "byte[]",
         "index": 3,
-        "dependsOn": 2//according loginLength value to cut bytes 
+        "dependsOn": 5
     }
 
 ]

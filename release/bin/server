@@ -1,0 +1,1 @@
+java -Dloader.path="$(dirname "$PWD")/" -jar  $(dirname "$PWD")/iot-mqtt-bridge-1.0.jar --spring.config.location=$(dirname "$PWD")/config/bridge.yml

@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
-import com.github.shicloud.bridge.Startup;
 import com.github.shicloud.jdbc.annotation.ID;
 import com.github.shicloud.utils.CamelNameUtils;
 
@@ -63,9 +62,9 @@ public class ModelParser {
 					log.error(upperName + " class create field {} error", field.getName(), e);
 				}
 			}
-
+			
 			FileUtils.writeByteArrayToFile(
-					new File(Startup.class.getResource("/").getPath() + "/" + className.replace(".", "/") + ".class"),
+					new File("../" + className.replace(".", "/") + ".class"),
 					ctClass.toBytecode());
 			Class<?> c = Class.forName(className);
 

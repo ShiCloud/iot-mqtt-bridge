@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mqtt_test?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: 
+    password: 
+jdbc: 
+  template: 
+    prefix: t_
+    suffix: _test
+    insertGetId: false    
+logging:
+  config: ../config/logback.xml
+bridge: 
+  modelPath: ../config/model.json
+  mqtts: 
+    - url: tcp://localhost:1883
+      username: 
+      password: 
+      keepAlive: 20
+      retained: false
+      reconnectAttemptsMax: -1
+      reconnectDelay: 10
+      models: 
+        - user
+
