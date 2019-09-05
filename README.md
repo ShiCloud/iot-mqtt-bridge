@@ -79,3 +79,4 @@ bridge:
 
 ```
 
+![欢迎大家一起交流](https://github.com/ShiCloud/iot-mqtt/blob/master/pic/iot-mqtt%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png)
