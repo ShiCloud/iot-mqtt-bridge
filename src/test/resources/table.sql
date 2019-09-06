@@ -1,15 +1,9 @@
--- ----------------------------
--- Table structure for user
--- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT ,
-  `age` tinyint(4)  ,
-  `weight` float  ,
-  `salary` double ,
-  `login` varchar(20) ,
-  `create_time` datetime(3)  ,
-  `is_male` tinyint(4) ,
-  `is_del` tinyint(4)  ,
-  PRIMARY KEY (`id`, `create_time`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8;
+DROP TABLE IF EXISTS t_device_info;
+CREATE TABLE t_device_info (
+  id int AUTO_INCREMENT,
+  device_id smallint NOT NULL,
+  msg_code int,
+	msg_value int,
+  time_stamp datetime,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

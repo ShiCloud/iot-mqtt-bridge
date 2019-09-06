@@ -27,3 +27,6 @@ hs_err_pid*
 /.settings/org.eclipse.core.resources.prefs
 /.settings/org.eclipse.jdt.core.prefs
 /.settings/org.eclipse.m2e.core.prefs
+/src/main/resources/bridge.yml
+/src/main/resources/logback.xml
+/src/main/resources/model.json

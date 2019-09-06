@@ -9,6 +9,7 @@ import javax.persistence.Transient;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.github.shicloud.jdbc.annotation.ID;
@@ -63,8 +64,10 @@ public class ModelParser {
 				}
 			}
 			
+			String classpath = ResourceUtils.getURL("classpath:").getPath();
+			log.debug("classpath::"+classpath);
 			FileUtils.writeByteArrayToFile(
-					new File("../" + className.replace(".", "/") + ".class"),
+					new File(classpath + className.replace(".", "/") + ".class"),
 					ctClass.toBytecode());
 			Class<?> c = Class.forName(className);
 

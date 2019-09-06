@@ -42,17 +42,17 @@ public class Startup implements ApplicationRunner {
     public void run(ApplicationArguments args) throws Exception {
 		String json = FileUtils.readFileToString(new File(bridgeConfig.getModelPath())); 
 		List<Model> models = ModelParser.parser(json);
+		ModelParser.loadAll(models);
+		
 		Map<String,Model> modelMap = new HashMap<>();
 		for (Model model : models) {
 			modelMap.put(model.getName(), model);
 		}
 		
-		ModelParser.loadAll(models);
-		
 		for(MqttConfig mqttConfig: bridgeConfig.getMqtts()) {
 			for (String modelName : mqttConfig.getModels()) {
 				Model model = modelMap.get(modelName);
-				if("mysql".equals(model.getStoreType())) {
+				if("MYSQL".equals(model.getStoreType().toUpperCase())) {
 					new MysqlHandler(model,mqttConfig,jtt);
 				}
 			}

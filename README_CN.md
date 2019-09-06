@@ -7,47 +7,71 @@
 - [ ] 批处理存储数据
 - [ ] 自定义各种handler
 
-你只需要在 model.json 里定义一个描述文件，具体以含义看注释, 
 
-然后配置mqtt ，mysql连接信息在 bridge.yml，
 
-运行 release/bin/server  启动项目 
+假如有一个这种结构的消息，要存储到t_device_info表里
 
-就可以自动根据描述文件解析mqtt消息并存进数据库内。
+| 列名     | device_id | msg_code   | msg_value      | serial num |
+| -------- | --------- | ---------- | -------------- | ---------- |
+| 数据类型 | short     | int        | float          | int        |
+| 原值     | 3,-23     | 0,0,-44,49 | 66,-10,-26,102 | 0,0,4,-46  |
+| 实际值   | 1001      | 10000      | 123.45         | 4321       |
+
+可以如下配置：
+
+```sql
+DROP TABLE IF EXISTS t_device_info;
+CREATE TABLE t_device_info (
+  id int AUTO_INCREMENT,
+  device_id smallint NOT NULL,
+  msg_code int,
+  msg_value int,
+  time_stamp datetime,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+
 
 ```json
 [
   {
-    "name": "user", //"动态生成的类名" 
-    "topic": "user_topic",
-    "clientId": "user_client",
+    "name": "deviceInfo",
+    "tableName": "t_device_info",
+    "topic": "device_info_topic",
+    "clientId": "device_info_client",
     "cleanSession": true,
     "qos": 1,
     "storeType": "mysql",
     "fields": [{
-        "name": "id",
-        "type": "long", //"存数据库字段的类型" 
+        "name": "deviceId",
+        "type": "short",
         "index": 1,
-        "lenght": 8, //"截取多少个字节" 
-        "offset": 2,
-        "idType": "auto" //"如果是auto就是用数据库的自增，否则是截取到的数据"
+        "lenght": 2
     },
     {
-        "name": "loginLength",
+        "name": "msgCode",
         "type": "int",
         "index": 2,
-        "lenght": 2,
-        "isTransient": true //"不持久化到数据库内"
+        "lenght": 4
     },
     {
-        "name": "login",
-        "type": "byte[]",
+        "name": "msgValue",
+        "type": "float",
         "index": 3,
-        "dependsOn": 2 //"根据指定index的字段的值作为长度" 
-    }
-
+        "lenght": 4
+    },
+    {
+        "name": "serialNum",
+        "type": "int",
+        "index": 4,
+        "lenght": 4
+    }]
+  }
 ]
 ```
+
+
 
 ```yaml
 spring:
@@ -56,11 +80,6 @@ spring:
     url: jdbc:mysql://localhost:3306/mqtt_test
     username: 
     password: 
-jdbc: 
-  template: 
-    prefix: t_
-    suffix: _test
-    insertGetId: false    
 logging:
   config: logback.xml
 bridge: 
@@ -74,8 +93,9 @@ bridge:
       reconnectAttemptsMax: -1
       reconnectDelay: 10
       models: 
-        - user
+        - deviceInfo
 
 
 ```
 
+发送消息后，最终数据就会被自动保存到数据库内

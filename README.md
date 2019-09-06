@@ -1,53 +1,77 @@
 # iot-mqtt-bridge
 **feature:**
 
-- [x] parser basic  type data into mysql
-- [ ] parser basic  type data into kafka
-- [ ] support more complex byte data persistence
-- [ ] batch save data
-- [ ] custom mqtt handler
+- [x] 解析简单mqtt消息存到mysql
+- [ ] 解析简单mqtt消息存到kafka
+- [ ] 解析复杂消息
+- [ ] 批处理存储数据
+- [ ] 自定义各种handler
 
-you just define a description json file  in model.json, 
 
-and mqtt connect info and  mysql db info in bridge.yml
 
-then run release/bin/server  to start
+假如有一个这种结构的消息，要存储到t_device_info表里
 
-this tools will automate save mqtt byte data into db.
+| 列名     | device_id | msg_code   | msg_value      | serial num |
+| -------- | --------- | ---------- | -------------- | ---------- |
+| 数据类型 | short     | int        | float          | int        |
+| 原值     | 3,-23     | 0,0,-44,49 | 66,-10,-26,102 | 0,0,4,-46  |
+| 实际值   | 1001      | 10000      | 123.45         | 4321       |
+
+可以如下配置：
+
+```sql
+DROP TABLE IF EXISTS t_device_info;
+CREATE TABLE t_device_info (
+  id int AUTO_INCREMENT,
+  device_id smallint NOT NULL,
+  msg_code int,
+  msg_value int,
+  time_stamp datetime,
+  PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+```
+
+
 
 ```json
 [
   {
-    "name": "user", //"this will become class name" 
-    "topic": "user_topic",
-    "clientId": "user_client",
+    "name": "deviceInfo",
+    "tableName": "t_device_info",
+    "topic": "device_info_topic",
+    "clientId": "device_info_client",
     "cleanSession": true,
     "qos": 1,
     "storeType": "mysql",
     "fields": [{
-        "name": "id",
-        "type": "long", //"this will become field type" 
+        "name": "deviceId",
+        "type": "short",
         "index": 1,
-        "lenght": 8, //"how many bytes will be cut into this field" 
-        "offset": 2,
-        "idType": "auto" //"this field will use db auto gene value, insert into db"
+        "lenght": 2
     },
     {
-        "name": "loginLength",
+        "name": "msgCode",
         "type": "int",
         "index": 2,
-        "lenght": 2,
-        "isTransient": true //"this will not saved into db"
+        "lenght": 4
     },
     {
-        "name": "login",
-        "type": "byte[]",
+        "name": "msgValue",
+        "type": "float",
         "index": 3,
-        "dependsOn": 2 //"according loginLength value to cut bytes" 
-    }
-
+        "lenght": 4
+    },
+    {
+        "name": "serialNum",
+        "type": "int",
+        "index": 4,
+        "lenght": 4
+    }]
+  }
 ]
 ```
+
+
 
 ```yaml
 spring:
@@ -56,11 +80,6 @@ spring:
     url: jdbc:mysql://localhost:3306/mqtt_test
     username: 
     password: 
-jdbc: 
-  template: 
-    prefix: t_
-    suffix: _test
-    insertGetId: false    
 logging:
   config: logback.xml
 bridge: 
@@ -74,9 +93,13 @@ bridge:
       reconnectAttemptsMax: -1
       reconnectDelay: 10
       models: 
-        - user
+        - deviceInfo
 
 
 ```
 
-![欢迎大家一起交流](https://github.com/ShiCloud/iot-mqtt/blob/master/pic/iot-mqtt%E7%BE%A4%E8%81%8A%E4%BA%8C%E7%BB%B4%E7%A0%81.png)
+cd release/bin
+
+./server 启动项目
+
+发送消息后，最终数据就会被自动保存到数据库内
