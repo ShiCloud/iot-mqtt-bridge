@@ -2,8 +2,8 @@
 **feature:**
 
 - [x] 解析简单mqtt消息存到mysql
+- [x] 解析复杂消息
 - [ ] 解析简单mqtt消息存到kafka
-- [ ] 解析复杂消息
 - [ ] 批处理存储数据
 - [ ] 自定义各种handler
 
