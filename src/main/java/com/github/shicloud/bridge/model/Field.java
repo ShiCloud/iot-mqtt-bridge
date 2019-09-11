@@ -6,6 +6,8 @@ public class Field {
 	
 	private String type;
 	
+	private Integer divide;
+	
 	private Integer index;
 	
 	private Integer lenght;
@@ -18,6 +20,8 @@ public class Field {
 	
 	private String idType;
 	
+	private Boolean isLittleEnd;
+	
 	public String getName() {
 		return name;
 	}
@@ -29,6 +33,12 @@ public class Field {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public Integer getDivide() {
+		return divide;
+	}
+	public void setDivide(Integer divide) {
+		this.divide = divide;
 	}
 	public Integer getIndex() {
 		return index;
@@ -65,5 +75,11 @@ public class Field {
 	}
 	public void setIdType(String idType) {
 		this.idType = idType;
+	}
+	public Boolean getIsLittleEnd() {
+		return isLittleEnd;
+	}
+	public void setIsLittleEnd(Boolean isLittleEnd) {
+		this.isLittleEnd = isLittleEnd;
 	}
 }

@@ -1,8 +1,6 @@
 package com.github.shicloud.bridge;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -20,7 +18,7 @@ import com.github.shicloud.bridge.config.BridgeConfig;
 import com.github.shicloud.bridge.config.MqttConfig;
 import com.github.shicloud.bridge.model.Model;
 import com.github.shicloud.bridge.model.ModelParser;
-import com.github.shicloud.bridge.mysql.MysqlHandler;
+import com.github.shicloud.bridge.mysql.MsgHandler;
 import com.github.shicloud.jdbc.templete.JdbcTemplateTool;
 
 @SpringBootApplication(scanBasePackages = "com.github.shicloud")
@@ -28,36 +26,27 @@ import com.github.shicloud.jdbc.templete.JdbcTemplateTool;
 @EnableTransactionManagement(proxyTargetClass = true)
 public class Startup implements ApplicationRunner {
 	private static final Logger log = LoggerFactory.getLogger(Startup.class);
-	
+
 	@Autowired
 	BridgeConfig bridgeConfig;
 	@Autowired
 	JdbcTemplateTool jtt;
-	
+
 	public static void main(String[] args) {
 		new SpringApplicationBuilder().sources(Startup.class).run(args);
 	}
-	
-	@Override  
-    public void run(ApplicationArguments args) throws Exception {
-		String json = FileUtils.readFileToString(new File(bridgeConfig.getModelPath())); 
-		List<Model> models = ModelParser.parser(json);
-		ModelParser.loadAll(models);
-		
-		Map<String,Model> modelMap = new HashMap<>();
-		for (Model model : models) {
-			modelMap.put(model.getName(), model);
-		}
-		
-		for(MqttConfig mqttConfig: bridgeConfig.getMqtts()) {
+
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		String json = FileUtils.readFileToString(new File(bridgeConfig.getModelPath()));
+		Map<String, Model> modelMap = ModelParser.loadAll(json);
+
+		for (MqttConfig mqttConfig : bridgeConfig.getMqtts()) {
 			for (String modelName : mqttConfig.getModels()) {
-				Model model = modelMap.get(modelName);
-				if("MYSQL".equals(model.getStoreType().toUpperCase())) {
-					new MysqlHandler(model,mqttConfig,jtt);
-				}
+				new MsgHandler(modelMap.get(modelName), mqttConfig, jtt);
 			}
 		}
-		
+
 		log.info("startup success.");
-    }
+	}
 }
